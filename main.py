@@ -8,7 +8,7 @@ def copy_file_with_progress(source: str, destination: str):
     # Tamanho total do arquivo
     total_size = os.path.getsize(source)
     copied_size = 0
-    block_size = 1024 * 1024 * 10  # 1MB
+    block_size = 1024 * 1024  # 1MB
 
     with open(source, 'rb') as fsrc, open(destination, 'wb') as fdst:
         while True:
