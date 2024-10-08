@@ -1,14 +1,13 @@
 import os
+import shutil
 import tempfile
 import zipfile
-
-from win32com.client import Dispatch
 
 TEMP_DIR = tempfile.mkdtemp()
 PROTHEUS_DIR = r'\\192.168.100.30\Instalaveis\smartclient 03.06\smartclient.zip'
 DESTINATION_COPY_FILE = os.path.join(TEMP_DIR, 'smartclient.zip')
 DESTINATION_FOLDER = r'C:\\'
-TARGET_EXE_PATH = r'C:\smartclient\smartclient.exe'
+TARGET_LINK_PATH = r'C:\smartclient\Protheus.lnk'
 PUBLIC_DESKTOP_PATH = r'C:\Users\Public\Desktop\Protheus.lnk'
 
 
@@ -51,25 +50,15 @@ def unzip_file_with_progress(zip_file: str, destination_dir: str):
 
 
 # Função para criar atalho na área de trabalho pública
-def create_shortcut(target, shortcut_path):
-    shell = Dispatch('WScript.Shell')
-    shortcut = shell.CreateShortcut(shortcut_path)
-
-    # Definir o caminho do executável (programa alvo)
-    shortcut.TargetPath = target
-    shortcut.WorkingDirectory = os.path.dirname(target)
-
-    # Descrição opcional do atalho
-    shortcut.Description = "Protheus"
-
-    # Salva o atalho no local especificado
-    shortcut.Save()
-    print("Atalho criado com sucesso!")
+def create_shortcut():
+    shutil.move(TARGET_LINK_PATH, PUBLIC_DESKTOP_PATH)
 
 
-copy_file_with_progress(PROTHEUS_DIR, DESTINATION_COPY_FILE)
-unzip_file_with_progress(DESTINATION_COPY_FILE, DESTINATION_FOLDER)
-create_shortcut(TARGET_EXE_PATH, PUBLIC_DESKTOP_PATH)
-print("Limpando arquivos desnecessários ...")
-os.remove(DESTINATION_COPY_FILE)
-print("Instalação concluída!")
+if __name__ == '__main__':
+    copy_file_with_progress(PROTHEUS_DIR, DESTINATION_COPY_FILE)
+    unzip_file_with_progress(DESTINATION_COPY_FILE, DESTINATION_FOLDER)
+    create_shortcut()
+    print("Limpando arquivos desnecessários ...")
+    os.remove(DESTINATION_COPY_FILE)
+    print("Instalação realizada com sucesso!")
+    input("Aperte ENTER para sair ...")
